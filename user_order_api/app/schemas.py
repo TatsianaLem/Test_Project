@@ -1,4 +1,4 @@
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, EmailStr, Field
 from typing import Optional
 
 
@@ -6,7 +6,7 @@ from typing import Optional
 class UserBase(BaseModel):
     name: str
     email: EmailStr
-    age: int
+    age: int = Field(..., ge=0)
 
 
 class UserCreate(UserBase):
@@ -16,7 +16,7 @@ class UserCreate(UserBase):
 class UserUpdate(BaseModel):
     name: Optional[str] = None
     email: Optional[EmailStr] = None
-    age: Optional[int] = None
+    age: Optional[int] = Field(None, ge=0)
 
 
 class UserOut(UserBase):

@@ -30,6 +30,12 @@ def update_user(db: Session, user_id: int, updates: schemas.UserUpdate):
     db.refresh(user)
     return user
 
+def delete_user(db: Session, user_id: int):
+    user = db.query(models.User).filter(models.User.id == user_id).first()
+    if user:
+        db.delete(user)
+        db.commit()
+    return user
 
 
 def create_order(db: Session, order: schemas.OrderCreate):
@@ -61,4 +67,11 @@ def update_order(db: Session, order_id: int, updates: schemas.OrderUpdate):
         setattr(order, field, value)
     db.commit()
     db.refresh(order)
+    return order
+
+def delete_order(db: Session, order_id: int):
+    order = db.query(models.Order).filter(models.Order.id == order_id).first()
+    if order:
+        db.delete(order)
+        db.commit()
     return order

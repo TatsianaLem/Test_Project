@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from app import schemas, crud
 from app.database import SessionLocal
@@ -26,4 +26,14 @@ def read_order(order_id: int, db: Session = Depends(get_db)):
 
 @router.put("/{order_id}", response_model=schemas.OrderOut)
 def update_order(order_id: int, order: schemas.OrderUpdate, db: Session = Depends(get_db)):
-    return crud.update_order(db, order_id, order)
+    updated_order = crud.update_order(db, order_id, order)
+    if not updated_order:
+        raise HTTPException(status_code=404, detail="Order not found")
+    return updated_order
+
+@router.delete("/{order_id}", status_code=204)
+def delete_order(order_id: int, db: Session = Depends(get_db)):
+    order = crud.delete_order(db, order_id)
+    if not order:
+        raise HTTPException(status_code=404, detail="Order not found")
+    return
